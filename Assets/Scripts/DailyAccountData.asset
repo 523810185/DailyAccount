@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0218cfcbb65c2374bb06a83ef387fd46, type: 3}
-  m_Name: New Daily Account Data
+  m_Name: DailyAccountData
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 0
@@ -21,4 +21,94 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  list: []
+  list:
+  - year: 2022
+    month: 2
+    day: 7
+    cost: 16
+    costType: 9
+    remarks: "\u5FEB\u9012"
+  - year: 2022
+    month: 2
+    day: 7
+    cost: 349.2
+    costType: 12
+    remarks: "\u9752\u82B1\u74F7 & \u65B0\u5E74\u76AE\u80A4"
+  - year: 2022
+    month: 2
+    day: 7
+    cost: 248
+    costType: 7
+    remarks: "\u732B\u54AA\u65E5\u5386"
+  - year: 2022
+    month: 2
+    day: 8
+    cost: 7
+    costType: 4
+    remarks: "\u5976\u8336"
+  - year: 2022
+    month: 2
+    day: 8
+    cost: 17
+    costType: 4
+    remarks: "\u5403\u996D"
+  - year: 2022
+    month: 2
+    day: 8
+    cost: 54.5
+    costType: 4
+    remarks: "\u5403\u996D"
+  - year: 2022
+    month: 2
+    day: 8
+    cost: 234
+    costType: 13
+    remarks: "\u6C34\u7535\u8D39"
+  - year: 2022
+    month: 2
+    day: 8
+    cost: 17
+    costType: 9
+    remarks: "\u6253\u8F66"
+  - year: 2022
+    month: 2
+    day: 8
+    cost: 6
+    costType: 9
+    remarks: 
+  - year: 2022
+    month: 2
+    day: 8
+    cost: 30
+    costType: 13
+    remarks: "\u8BDD\u8D39"
+  - year: 2022
+    month: 2
+    day: 9
+    cost: 5.5
+    costType: 4
+    remarks: "\u591C\u5BB5\u3001\u6CE1\u9762"
+  - year: 2022
+    month: 2
+    day: 9
+    cost: 50
+    costType: 6
+    remarks: "\u5976\u8336"
+  - year: 2022
+    month: 2
+    day: 10
+    cost: 6.5
+    costType: 4
+    remarks: "\u65E9\u996D"
+  - year: 2022
+    month: 2
+    day: 10
+    cost: 11
+    costType: 7
+    remarks: "\u5FEB\u9012"
+  - year: 2022
+    month: 2
+    day: 10
+    cost: 5.5
+    costType: 4
+    remarks: "\u6CE1\u9762"

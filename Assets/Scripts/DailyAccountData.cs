@@ -25,6 +25,8 @@ namespace Sirenix.OdinInspector.Custom
             Traffic = 9, // 交通
             Travel = 10, // 旅游
             Pet = 11, // 宠物
+            Game = 12, // 游戏
+            LifeMust = 13, // 生活必须
         }
 
 
@@ -52,6 +54,7 @@ namespace Sirenix.OdinInspector.Custom
                 {"小卡片", CostType.Card},
                 {"书籍", CostType.Book},
                 {"二次元相关", CostType.ACG},
+                {"游戏", CostType.Game},
                 {"饮食", CostType.Food},
                 {"电影", CostType.Movie},
                 {"请客", CostType.Treat},
@@ -60,6 +63,7 @@ namespace Sirenix.OdinInspector.Custom
                 {"交通", CostType.Traffic},
                 {"旅游", CostType.Travel},
                 {"宠物", CostType.Pet},
+                {"生活必须", CostType.LifeMust},
             };
 
             [LabelText("备注"), LabelWidth(50)]
@@ -75,7 +79,36 @@ namespace Sirenix.OdinInspector.Custom
         }
 
         [Searchable()]
+        [OnValueChanged("OnListChange")]
         public List<Item> list;
+        private int m_fLastCnt = -1;
+        private void OnListChange()
+        {
+            if(m_fLastCnt == -1) 
+            {
+                m_fLastCnt = list.Count;
+                return;
+            }
+
+            if(m_fLastCnt != list.Count) 
+            {
+                if(list.Count > m_fLastCnt) 
+                {
+                    var last = list[list.Count - 1];
+                    if(last.year == 0 && last.month == 0 && last.day == 0) 
+                    {
+                        if(list.Count >= 2) 
+                        {
+                            var pre = list[list.Count - 2];
+                            last.year = pre.year;
+                            last.month = pre.month;
+                            last.day = pre.day;
+                        }
+                    }
+                }
+                m_fLastCnt = list.Count;
+            }
+        }
 
         [Button("按照时间排序", ButtonSizes.Medium)]
         public void SortByTime()
