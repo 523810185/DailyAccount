@@ -51,13 +51,13 @@ MonoBehaviour:
     day: 8
     cost: 17
     costType: 4
-    remarks: "\u5403\u996D"
+    remarks: "\u5916\u5356"
   - year: 2022
     month: 2
     day: 8
     cost: 54.5
     costType: 4
-    remarks: "\u5403\u996D"
+    remarks: "\u5916\u5356\uFF08KFC\uFF09"
   - year: 2022
     month: 2
     day: 8
@@ -75,7 +75,7 @@ MonoBehaviour:
     day: 8
     cost: 6
     costType: 9
-    remarks: 
+    remarks: "\u5730\u94C1"
   - year: 2022
     month: 2
     day: 8
@@ -85,15 +85,21 @@ MonoBehaviour:
   - year: 2022
     month: 2
     day: 9
+    cost: 50
+    costType: 6
+    remarks: "\u5976\u8336"
+  - year: 2022
+    month: 2
+    day: 9
     cost: 5.5
     costType: 4
     remarks: "\u591C\u5BB5\u3001\u6CE1\u9762"
   - year: 2022
     month: 2
-    day: 9
-    cost: 50
-    costType: 6
-    remarks: "\u5976\u8336"
+    day: 10
+    cost: 5.5
+    costType: 4
+    remarks: "\u6CE1\u9762"
   - year: 2022
     month: 2
     day: 10
@@ -108,7 +114,67 @@ MonoBehaviour:
     remarks: "\u5FEB\u9012"
   - year: 2022
     month: 2
-    day: 10
-    cost: 5.5
+    day: 11
+    cost: 12
     costType: 4
-    remarks: "\u6CE1\u9762"
+    remarks: "\u5976\u8336"
+  - year: 2022
+    month: 2
+    day: 12
+    cost: 0
+    costType: 13
+    remarks: "\u82B1\u8D39"
+  - year: 2022
+    month: 2
+    day: 12
+    cost: 25
+    costType: 4
+    remarks: "\u5403\u996D\uFF08\u9EA6\u5F53\u52B3\uFF09"
+  - year: 2022
+    month: 2
+    day: 12
+    cost: 5
+    costType: 9
+    remarks: "\u5730\u94C1"
+  - year: 2022
+    month: 2
+    day: 12
+    cost: 5
+    costType: 9
+    remarks: "\u5730\u94C1"
+  - year: 2022
+    month: 2
+    day: 12
+    cost: 1000
+    costType: 14
+    remarks: "\u6BCF\u6708\u56FA\u5B9A"
+  - year: 2022
+    month: 2
+    day: 13
+    cost: 7
+    costType: 4
+    remarks: "\u5976\u8336"
+  - year: 2022
+    month: 2
+    day: 13
+    cost: 15
+    costType: 4
+    remarks: "\u7F8E\u56E2\u4F1A\u5458"
+  - year: 2022
+    month: 2
+    day: 13
+    cost: 18.5
+    costType: 4
+    remarks: "\u5916\u5356"
+  - year: 2022
+    month: 2
+    day: 13
+    cost: 15
+    costType: 4
+    remarks: "\u5403\u996D"
+  - year: 2022
+    month: 2
+    day: 13
+    cost: 12
+    costType: 4
+    remarks: "\u5976\u8336"

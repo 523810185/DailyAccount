@@ -27,6 +27,43 @@ namespace Sirenix.OdinInspector.Custom
             Pet = 11, // 宠物
             Game = 12, // 游戏
             LifeMust = 13, // 生活必须
+            ForFamily = 14, // 家里人
+        }
+
+        public class CostTypeToStringMgr
+        {
+            private static Dictionary<CostType, string> m_mapTypeToString = null;
+            private static bool m_bIsInit = false;
+            private static void EnsureInit()
+            {
+                if(!m_bIsInit)
+                {
+                    m_mapTypeToString = new Dictionary<CostType, string>();
+                    m_mapTypeToString.Add(CostType.Default, "其它");
+                    m_mapTypeToString.Add(CostType.Card, "小卡片");
+                    m_mapTypeToString.Add(CostType.Book, "书籍");
+                    m_mapTypeToString.Add(CostType.ACG, "二次元相关");
+                    m_mapTypeToString.Add(CostType.Game, "游戏");
+                    m_mapTypeToString.Add(CostType.Food, "饮食");
+                    m_mapTypeToString.Add(CostType.Movie, "电影");
+                    m_mapTypeToString.Add(CostType.Treat, "请客");
+                    m_mapTypeToString.Add(CostType.Present, "送礼");
+                    m_mapTypeToString.Add(CostType.Electronic, "电子设备");
+                    m_mapTypeToString.Add(CostType.Traffic, "交通");
+                    m_mapTypeToString.Add(CostType.Travel, "旅游");
+                    m_mapTypeToString.Add(CostType.Pet, "宠物");
+                    m_mapTypeToString.Add(CostType.LifeMust, "生活必须");
+                    m_mapTypeToString.Add(CostType.ForFamily, "家里人");
+                }
+            }
+
+            public static string GetString(CostType type) 
+            {
+                EnsureInit();
+                string str = "undefined";
+                m_mapTypeToString.TryGetValue(type, out str);
+                return str;
+            }
         }
 
 
@@ -50,20 +87,21 @@ namespace Sirenix.OdinInspector.Custom
             public CostType costType = CostType.Default;
             private ValueDropdownList<CostType> OnCostTypeDropDown = new ValueDropdownList<CostType>
             {
-                {"其它", CostType.Default},
-                {"小卡片", CostType.Card},
-                {"书籍", CostType.Book},
-                {"二次元相关", CostType.ACG},
-                {"游戏", CostType.Game},
-                {"饮食", CostType.Food},
-                {"电影", CostType.Movie},
-                {"请客", CostType.Treat},
-                {"送礼", CostType.Present},
-                {"电子设备", CostType.Electronic},
-                {"交通", CostType.Traffic},
-                {"旅游", CostType.Travel},
-                {"宠物", CostType.Pet},
-                {"生活必须", CostType.LifeMust},
+                {CostTypeToStringMgr.GetString(CostType.Default), CostType.Default},
+                {CostTypeToStringMgr.GetString(CostType.Card), CostType.Card},
+                {CostTypeToStringMgr.GetString(CostType.Book), CostType.Book},
+                {CostTypeToStringMgr.GetString(CostType.ACG), CostType.ACG},
+                {CostTypeToStringMgr.GetString(CostType.Game), CostType.Game},
+                {CostTypeToStringMgr.GetString(CostType.Food), CostType.Food},
+                {CostTypeToStringMgr.GetString(CostType.Movie), CostType.Movie},
+                {CostTypeToStringMgr.GetString(CostType.Treat), CostType.Treat},
+                {CostTypeToStringMgr.GetString(CostType.Present), CostType.Present},
+                {CostTypeToStringMgr.GetString(CostType.Electronic), CostType.Electronic},
+                {CostTypeToStringMgr.GetString(CostType.Traffic), CostType.Traffic},
+                {CostTypeToStringMgr.GetString(CostType.Travel), CostType.Travel},
+                {CostTypeToStringMgr.GetString(CostType.Pet), CostType.Pet},
+                {CostTypeToStringMgr.GetString(CostType.LifeMust), CostType.LifeMust},
+                {CostTypeToStringMgr.GetString(CostType.ForFamily), CostType.ForFamily},
             };
 
             [LabelText("备注"), LabelWidth(50)]
