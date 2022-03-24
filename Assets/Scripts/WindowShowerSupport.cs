@@ -94,20 +94,41 @@ namespace Sirenix.OdinInspector.Custom
             SetTitle();
 
             m_stData.SortByTime();
+            Dictionary<DailyAccountData.Item, float> dateToCost = new Dictionary<DailyAccountData.Item, float>();
 
-            float max = 0.001f;
             foreach (var item in m_stData.list)
             {
-                max = Mathf.Max(max, item.cost);
+                var key = item;
+                if(!dateToCost.ContainsKey(item))
+                {
+                    key = new DailyAccountData.Item();
+                    key.year = item.year;
+                    key.month = item.month;
+                    key.day = item.day;
+                    dateToCost.Add(key, 0);
+                }
+
+                dateToCost[key] = dateToCost[key] + item.cost;
+            }
+
+            float max = 0.001f;
+            float all = 0f;
+            foreach (var kv in dateToCost)
+            {
+                max = Mathf.Max(max, kv.Value);
+                all += kv.Value;
             }
 
             progressItems.Clear();
-            foreach (var item in m_stData.list)
+            foreach (var kv in dateToCost)
             {
+                var item = kv.Key;
+                var cost = kv.Value;
                 var newProgressItem = new ProgressItem();
-                newProgressItem.progerss = ProgressItem.MAX * item.cost / max; 
-                newProgressItem.strOnBar = item.cost.ToString();
-                newProgressItem.title = $"{item.year}-{item.month}-{item.day}: {DailyAccountData.CostTypeToStringMgr.GetString(item.costType)}（{item.remarks}）";
+                newProgressItem.progerss = ProgressItem.MAX * cost / max; 
+                float rate = (float)Math.Round((double)100 * cost / all, 2);
+                newProgressItem.strOnBar = $"{cost} ({rate}%)";
+                newProgressItem.title = $"{item.year}-{item.month}-{item.day}: ";
                 progressItems.Add(newProgressItem);
             }
         }

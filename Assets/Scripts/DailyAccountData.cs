@@ -68,7 +68,7 @@ namespace Sirenix.OdinInspector.Custom
 
 
         [Serializable]
-        public class Item : IComparable<Item>
+        public class Item : IComparable<Item>, IEquatable<Item>
         {
             [LabelText("年"), LabelWidth(50), HorizontalGroup("data")]
             public int year;
@@ -113,6 +113,16 @@ namespace Sirenix.OdinInspector.Custom
                 if(month != other.month) return month - other.month;
                 if(day != other.day) return day - other.day;
                 return 0;
+            }
+
+            public bool Equals(Item other)
+            {
+                return this.CompareTo(other) == 0;
+            }
+
+            public override int GetHashCode()
+            {
+                return year * 233 + month * 71 + day * 37;
             }
         }
 
