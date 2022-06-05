@@ -36,6 +36,12 @@ namespace Sirenix.OdinInspector.Custom
             m_stData.SortByTime();
             foreach (var item in m_stData.list)
             {
+                // TODO.. 暂时先这么过滤一下非法数据
+                if(item.year < 2022) 
+                {
+                    continue;
+                }
+                
                 m_fAllCost += item.cost;
             }
 
@@ -148,6 +154,12 @@ namespace Sirenix.OdinInspector.Custom
 
             foreach (var item in m_stData.list)
             {
+                // TODO.. 暂时先这么过滤一下非法数据
+                if(item.year < 2022) 
+                {
+                    continue;
+                }
+
                 var costType = item.costType;
                 var cost = item.cost;
                 if(!typeAllCost.ContainsKey(costType))
