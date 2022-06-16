@@ -1,0 +1,3 @@
+[submodule "Assets/3rd/TypeCmpAndCloneGenerator-Pure-CSharp-"]
+	path = Assets/3rd/TypeCmpAndCloneGenerator-Pure-CSharp-
+	url = git@github.com:523810185/TypeCmpAndCloneGenerator-Pure-CSharp-.git
