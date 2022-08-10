@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System;
+using Sirenix.Utilities.Editor;
+using Sirenix.OdinInspector.Editor;
+using System.Linq;
+using W3.TypeExtension;
 
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Custom
@@ -120,41 +124,97 @@ namespace Sirenix.OdinInspector.Custom
                 return this.CompareTo(other) == 0;
             }
 
+            // 这个目前是为了按照天统计的时候能合到一起，这个做法不好，后面改进一下
             public override int GetHashCode()
             {
                 return year * 233 + month * 71 + day * 37;
             }
+
+            #region 内部使用
+            public enum State
+            {
+                Normal = 0,
+                Init = 1,
+            }
+            [HideInInspector]
+            public State m_eState = State.Normal;
+
+            private DailyAccountData m_stCtx;
+            public void SetContext(DailyAccountData ctx) { m_stCtx = ctx; }
+
+            [HorizontalGroup("btn"), Button("复制上一个"), ShowIf("m_eState", State.Init)]
+            private void CopyLastItem()
+            {
+                m_stCtx?.NotifyCopyItemFromLast(this);
+            }
+
+            [HorizontalGroup("btn"), Button("完成初始化"), ShowIf("m_eState", State.Init)]
+            private void FinishInit()
+            {
+                m_eState = State.Normal;
+            }
+            #endregion
         }
 
         [Searchable()]
-        [OnValueChanged("OnListChange")]
+        // [OnValueChanged("OnListChange")]
+        [OnCollectionChanged(After = "OnListChange")]
+        [ListDrawerSettings(OnBeginListElementGUI = "OnBeginListElementGUI", OnEndListElementGUI = "OnEndListElementGUI")]
         public List<Item> list;
-        private int m_fLastCnt = -1;
-        private void OnListChange()
-        {
-            if(m_fLastCnt == -1) 
-            {
-                m_fLastCnt = list.Count;
-                return;
-            }
+        // private int m_fLastCnt = -1;
+        // private void OnListChange()
+        // {
+        //     if(m_fLastCnt == -1) 
+        //     {
+        //         m_fLastCnt = list.Count;
+        //         return;
+        //     }
 
-            if(m_fLastCnt != list.Count) 
+        //     if(m_fLastCnt != list.Count) 
+        //     {
+        //         if(list.Count > m_fLastCnt) 
+        //         {
+        //             var last = list[list.Count - 1];
+        //             if(last.year == 0 && last.month == 0 && last.day == 0) 
+        //             {
+        //                 if(list.Count >= 2) 
+        //                 {
+        //                     var pre = list[list.Count - 2];
+        //                     last.year = pre.year;
+        //                     last.month = pre.month;
+        //                     last.day = pre.day;
+        //                 }
+        //             }
+        //         }
+        //         m_fLastCnt = list.Count;
+        //     }
+        // }
+        private void OnListChange(CollectionChangeInfo info)
+        {
+            if(info.ChangeType == CollectionChangeType.Add)
             {
-                if(list.Count > m_fLastCnt) 
-                {
-                    var last = list[list.Count - 1];
-                    if(last.year == 0 && last.month == 0 && last.day == 0) 
-                    {
-                        if(list.Count >= 2) 
-                        {
-                            var pre = list[list.Count - 2];
-                            last.year = pre.year;
-                            last.month = pre.month;
-                            last.day = pre.day;
-                        }
-                    }
-                }
-                m_fLastCnt = list.Count;
+                // info.Index is Always 0
+                Debug.Assert(info.Index == 0);
+                var newItem = list[list.Count - 1 - info.Index];
+                newItem.SetContext(this);
+                newItem.m_eState = Item.State.Init;
+            }
+        }
+
+        private void OnBeginListElementGUI(int id)
+        {
+            var item = list[id];
+            if(item.m_eState == Item.State.Init) 
+            {
+                GUIHelper.PushColor(Color.red);
+            }
+        }
+        private void OnEndListElementGUI(int id)
+        {
+            var item = list[id];
+            if(item.m_eState == Item.State.Init) 
+            {
+                GUIHelper.PopColor();
             }
         }
 
@@ -174,6 +234,30 @@ namespace Sirenix.OdinInspector.Custom
                 AssetDatabase.TryGetGUIDAndLocalFileIdentifier(this.GetInstanceID(), out guid, out _);
                 return guid;
             }
+        }
+
+        public void Init()
+        {
+            Debug.Log(" Data is Init ! ");
+            list.ForEach(x => x.SetContext(this));
+        }
+
+        public void NotifyCopyItemFromLast(Item item) 
+        {
+            // 目前这个IndexOf应该有bug，因为Equals的实现有bug
+            var id = list.IndexOf(item);
+            var clone = TypeUtility.GetTypeClone<Item>();
+            if(0 < id && id < list.Count) 
+            {
+                var preState = item.m_eState;
+                clone(item, list[id - 1]);
+                item.m_eState = preState;
+            }
+        }
+
+        private void Awake() 
+        {
+            Init();    
         }
     }
 }

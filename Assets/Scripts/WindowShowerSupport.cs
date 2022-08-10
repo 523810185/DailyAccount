@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 #if UNITY_EDITOR
 namespace Sirenix.OdinInspector.Custom
@@ -18,11 +19,43 @@ namespace Sirenix.OdinInspector.Custom
         public void SetContext(DailyAccountData data)
         {
             m_stData = data;
+            m_stData.Init();
         }
 
         private bool IsInit()
         {
             return m_stData != null;
+        }
+
+        private List<DailyAccountData.Item> m_stShowData = new List<DailyAccountData.Item>();
+        private void GenShowDataByDateLimit()
+        {
+            bool Cmp(Vector3Int v3, DailyAccountData.Item x, bool isLess)
+            {
+                int sign = isLess ? 1 : -1;
+                // v3 < x => v3 - x < 0
+                if((v3.x - x.year) * sign < 0)
+                {
+                    return true;
+                }
+                else if(v3.x - x.year == 0) 
+                {
+                    if((v3.y - x.month) * sign < 0) 
+                    {
+                        return true;
+                    }
+                    else if(v3.y - x.month == 0)
+                    {
+                        return (v3.z - x.day) * sign <= 0;
+                    }
+                }
+                return false;
+            }
+            m_stShowData = m_stData.list.Where(
+                (x) => {
+                    return Cmp(stDate, x, isLess: true) && Cmp(edDate, x, isLess: false);
+                }
+            ).ToList();
         }
 
         private void SetTitle()
@@ -34,21 +67,23 @@ namespace Sirenix.OdinInspector.Custom
 
             m_fAllCost = 0f;
             m_stData.SortByTime();
-            foreach (var item in m_stData.list)
-            {
-                // TODO.. 暂时先这么过滤一下非法数据
-                if(item.year < 2022) 
-                {
-                    continue;
-                }
+            m_stShowData.ForEach(x => m_fAllCost += x.cost);
+            // foreach (var item in m_stData.list)
+            // {
+            //     // TODO.. 暂时先这么过滤一下非法数据
+            //     if(item.year < 2022) 
+            //     {
+            //         continue;
+            //     }
                 
-                m_fAllCost += item.cost;
-            }
+            //     m_fAllCost += item.cost;
+            // }
 
             mainTitle = $"总花费：{m_fAllCost}";
-            var firstItem = m_stData.list[0];
-            var lastItem = m_stData.list[m_stData.list.Count - 1];
-            subTitle = $"从 {firstItem.year}-{firstItem.month}-{firstItem.day} 到 {lastItem.year}-{lastItem.month}-{lastItem.day}";
+            // var firstItem = m_stData.list[0];
+            // var lastItem = m_stData.list[m_stData.list.Count - 1];
+            // subTitle = $"从 {firstItem.year}-{firstItem.month}-{firstItem.day} 到 {lastItem.year}-{lastItem.month}-{lastItem.day}";
+            subTitle = $"从 {stDate.x}-{stDate.y}-{stDate.z} 到 {edDate.x}-{edDate.y}-{edDate.z}";
         }
 
         #region 数据层（显示层）
@@ -59,6 +94,20 @@ namespace Sirenix.OdinInspector.Custom
 
         [Title("$mainTitle", "$subTitle", titleAlignment:TitleAlignments.Centered)]
         public List<ProgressItem> progressItems = new List<ProgressItem>();
+        
+        [LabelText("起始日期"), HorizontalGroup("endBarDateHor"), OnValueChanged("OnDateChange")]
+        public Vector3Int stDate;
+
+        [LabelText("结束日期"), HorizontalGroup("endBarDateHor"), OnValueChanged("OnDateChange")]
+        public Vector3Int edDate;
+
+        public DateTime xxx;
+
+        private void OnDateChange()
+        {
+            GenShowDataByDateLimit();
+            SetTitle();
+        }
 
         #endregion
 
@@ -139,7 +188,7 @@ namespace Sirenix.OdinInspector.Custom
             }
         }
 
-        [Button("按照类型排序", ButtonSizes.Medium)]
+        [Button("按照类型排序", ButtonSizes.Medium), HorizontalGroup("SortByTypeHor")]
         public void ShowProgressByType()
         {
             if(!IsInit())
@@ -147,12 +196,13 @@ namespace Sirenix.OdinInspector.Custom
                 return;
             }
 
-            SetTitle();
+            // SetTitle();
             
-            m_stData.SortByTime();
+            // m_stData.SortByTime();
             Dictionary<DailyAccountData.CostType, float> typeAllCost = new Dictionary<DailyAccountData.CostType, float>();
 
-            foreach (var item in m_stData.list)
+            // foreach (var item in m_stData.list)
+            foreach (var item in m_stShowData)
             {
                 // TODO.. 暂时先这么过滤一下非法数据
                 if(item.year < 2022) 
@@ -193,6 +243,15 @@ namespace Sirenix.OdinInspector.Custom
 
             // 按照花费从高到低排序
             progressItems.Sort((a, b) => { var diff = a.val - b.val; return diff < 0f ? 1 : diff > 0f ? -1 : 0;} );
+        }
+
+        [Button("前进一个月", ButtonSizes.Medium), HorizontalGroup("SortByTypeHor")]
+        private void ShowTypeAndStepOneMonth()
+        {
+            stDate.y += 1;
+            edDate.y += 1;
+            OnDateChange();
+            ShowProgressByType();
         }
     }
 }
